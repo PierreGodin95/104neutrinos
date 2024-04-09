@@ -1,0 +1,162 @@
+#!/usr/bin/env python3
+import math
+import sys
+
+def aritmeticmean(recValue, mean, newValue):
+    recValue = float(recValue)
+    mean = float(mean)
+    newValue = float(newValue)
+    values = recValue * mean + newValue
+    recValue += 1
+    result = values / recValue
+    return result
+
+def rootmean(nbValue, root_mean, newValue):
+    nbValue = float(nbValue)
+    root_mean = float(root_mean)
+    newValue = float(newValue)
+    values = (nbValue * root_mean)**2
+    nbValue += 1
+    result = math.sqrt(1 / nbValue * (values + newValue))
+    return result
+
+def harmomean(nbValue, mean, newValue):
+    nbValue = float(nbValue)
+    mean = float(mean)
+    newValue = float(newValue)
+    a = nbValue / mean
+    a += 1 / newValue
+    nbValue += 1
+    result = nbValue / a
+    return result
+
+def stand_deviation(sd, armean, new_value, nb_values):
+    nb_values = float(nb_values)
+    armean = float(armean)
+    new_value = float(new_value)
+    sd = float(sd)
+    aritmetic = aritmeticmean(nb_values, armean, new_value)
+    variance = sd**2
+    variance *= (nb_values)
+    variance += (new_value - aritmetic)**2
+    variance /= (nb_values + 1)
+    new_deviation = math.sqrt(variance)
+    return(new_deviation)
+
+def create_rootmean(armean, sd):
+    rootmean = math.sqrt((armean**2 + sd**2))
+    return(rootmean)
+
+
+#################################################################################### First time executing the program only using argv
+
+def first_wrappingup():
+    num_arg = len(sys.argv)
+    if num_arg == 2:
+        if sys.argv[1] == '-h':
+            print("USAGE")
+            print("   ./104neutrinos n a h sd\n")
+            print("DESCRIPTION")
+            print("   n     number of values")
+            print("   a     arithmetic mean")
+            print("   h     harmonic mean")
+            print("   sd    standard deviation")
+            sys.exit(0)
+
+    if num_arg == 1:
+        print("No parameters given")
+        sys.exit(84)
+    if num_arg != 5:
+        print("Not enough parameters")
+        sys.exit(84)
+
+    for i in range (num_arg - 1):
+        i += 1
+        for j in range (len(sys.argv[i])):
+            if ord(sys.argv[i][j]) < 48 or ord(sys.argv[i][j]) > 57:
+                print("Value needs to be a positive integer")
+                sys.exit(84)
+
+    nb_values = float(sys.argv[1])
+    current_armean = float(sys.argv[2])
+    current_harmean = float(sys.argv[3])
+    sd = float(sys.argv[4])
+
+    new_value = input("Enter next value: ")
+    if new_value == 'END':
+        print("Program ended")
+        sys.exit(0)
+    if new_value == '':
+        print("Program ended")
+        sys.exit(84)
+    for i in range (len(new_value)):
+        if ord(new_value[i]) < 48 or ord(new_value[i]) > 57:
+            print("Value needs to be a positive integer")
+            sys.exit(84)
+
+    aritmetic = aritmeticmean(nb_values, current_armean, new_value)
+    harmonic = harmomean(nb_values, current_harmean, new_value)
+    root = create_rootmean(aritmeticmean(nb_values, current_armean, new_value), stand_deviation(sd, current_armean, new_value, nb_values))
+    deviation = stand_deviation(sd, current_armean, new_value, nb_values)
+
+    print_aritmetic = formatted_number = "{:.2f}".format(aritmeticmean(nb_values, current_armean, new_value))
+    print_harmonic = formatted_number = "{:.2f}".format(harmomean(nb_values, current_harmean, new_value))
+    print_root = formatted_number = "{:.2f}".format(create_rootmean(aritmeticmean(nb_values, current_armean, new_value), stand_deviation(sd, current_armean, new_value, nb_values)))
+    print_deviation = formatted_number = "{:.2f}".format(stand_deviation(sd, current_armean, new_value, nb_values))
+    nb_values += 1
+
+    if float(aritmetic) / float(root) > 1:
+        sys.exit(84)
+
+    print("    Number of values: ", int(nb_values))
+    print("    Standard deviation: ", print_deviation)
+    print("    Arithmetic mean: ", print_aritmetic)
+    print("    Root mean square: ", print_root)
+    message = f"    Harmonic mean: {print_harmonic}\n"
+    print(message)
+
+    second_wrappingup(nb_values, aritmetic, harmonic, deviation)
+
+
+
+############################################################################ all the other times executing the program after the first one 
+############################################################################ using the parameters outputed in the first one
+
+def second_wrappingup(nb_values, current_armean, current_harmean, sd):
+    new_value = input("Enter next value: ")
+    if new_value == 'END':
+        print("Program ended")
+        sys.exit(0)
+    if new_value == '':
+        print("Program ended")
+        sys.exit(84)
+    for i in range (len(new_value)):
+        if ord(new_value[i]) < 48 or ord(new_value[i]) > 57:
+            print("Value needs to be a positive integer")
+            sys.exit(84)
+
+    aritmetic = aritmeticmean(nb_values, current_armean, new_value)
+    harmonic = harmomean(nb_values, current_harmean, new_value)
+    root = create_rootmean(aritmeticmean(nb_values, current_armean, new_value), stand_deviation(sd, current_armean, new_value, nb_values))
+    deviation = stand_deviation(sd, current_armean, new_value, nb_values)
+
+    print_aritmetic = formatted_number = "{:.2f}".format(aritmeticmean(nb_values, current_armean, new_value))
+    print_harmonic = formatted_number = "{:.2f}".format(harmomean(nb_values, current_harmean, new_value))
+    print_root = formatted_number = "{:.2f}".format(create_rootmean(aritmeticmean(nb_values, current_armean, new_value), stand_deviation(sd, current_armean, new_value, nb_values)))
+    print_deviation = formatted_number = "{:.2f}".format(stand_deviation(sd, current_armean, new_value, nb_values))
+    nb_values += 1
+
+    if float(aritmetic) / float(root) > 1:
+        sys.exit(84)
+
+    print("    Number of values: ", int(nb_values))
+    print("    Standard deviation: ", print_deviation)
+    print("    Arithmetic mean: ", print_aritmetic)
+    print("    Root mean square: ", print_root)
+    message = f"    Harmonic mean: {print_harmonic}\n"
+    print(message)
+
+    second_wrappingup(nb_values, aritmetic, harmonic, deviation)
+
+
+first_wrappingup()
